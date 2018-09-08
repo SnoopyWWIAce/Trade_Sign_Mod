@@ -1,0 +1,11 @@
+package com.snoopy_wwi_ace.isildurs_bane;
+
+public class TradeHandler {
+	
+	private static final String IDENTIFIER = "[trade]";
+	
+	private boolean isTradeSign(String[] lines) {
+		return lines[0].matches(IDENTIFIER);
+	}
+
+}

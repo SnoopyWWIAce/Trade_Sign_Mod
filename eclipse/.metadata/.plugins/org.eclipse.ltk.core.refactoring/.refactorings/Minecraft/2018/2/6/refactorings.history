@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename local variable &apos;shopCompound&apos; in &apos;com.snoopy_wwi_ace.isildurs_bane.shops.ShopList.readFromNBT(...)&apos; to &apos;comp&apos;&#x0D;&#x0A;- Original project: &apos;Minecraft&apos;&#x0D;&#x0A;- Original element: &apos;com.snoopy_wwi_ace.isildurs_bane.shops.ShopList.readFromNBT(NBTTagCompound).shopCompound&apos;&#x0D;&#x0A;- Renamed element: &apos;shopCompound&apos;&#x0D;&#x0A;- Update references to refactored element" description="Rename local variable &apos;shopCompound&apos;" id="org.eclipse.jdt.ui.rename.local.variable" input="/src\/main\/java&lt;com.snoopy_wwi_ace.isildurs_bane.shops{ShopList.java[ShopList~readFromNBT~QNBTTagCompound;@shopCompound!1380!1434!1395!1406!QNBTTagCompound;!0!false" name="comp" references="true" stamp="1517950417052" version="1.0"/>
+</session>

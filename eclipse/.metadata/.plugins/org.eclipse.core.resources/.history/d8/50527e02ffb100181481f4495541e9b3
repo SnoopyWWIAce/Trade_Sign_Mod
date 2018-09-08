@@ -1,0 +1,304 @@
+package com.snoopy_wwi_ace.isildurs_bane.shops;
+
+import java.util.ArrayList;
+import java.util.StringTokenizer;
+import java.util.UUID;
+
+import com.snoopy_wwi_ace.isildurs_bane.control.PlayerInventoryControl;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.entity.IMerchant;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntitySign;
+import net.minecraft.village.MerchantRecipe;
+import net.minecraft.village.MerchantRecipeList;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldSavedData;
+import net.minecraft.world.storage.MapStorage;
+
+/**
+ * World.setItemData() && World.loadItemData()
+ * 
+ * @author Steven
+ *
+ */
+public class ShopData extends WorldSavedData implements IInventory, IMerchant {
+	
+	private static final int INVENTORY_SIZE = 27;
+	private static final int MAX_STACK_SIZE = 64;
+	private static final int WRITABLE_BOOK_ID = 387;
+	private static final String SLOT_KEY = "slot";
+	private static final String ITEM_KEY = "item";
+	
+	private int x;
+	private int y;
+	private int z;
+	private UUID key;
+	
+	private final PlayerInventoryControl control = new PlayerInventoryControl();
+	
+	private EntityPlayer customer;
+	
+	private ItemStack[] inventory = new ItemStack[INVENTORY_SIZE];
+	
+	public ShopData(String keyIn, UUID player) {
+		super(keyIn);
+		StringTokenizer tokenizer = new StringTokenizer(keyIn, ",");
+		x = Integer.parseInt(tokenizer.nextToken());
+		y = Integer.parseInt(tokenizer.nextToken());
+		z = Integer.parseInt(tokenizer.nextToken());
+		key = player;
+	}
+
+	public void setPos(int xIn, int yIn, int zIn) {
+		x = xIn;
+		y = yIn;
+		z = zIn;
+	}
+	
+	public static ShopData get(EntityPlayer player, int x, int y, int z) {
+		MapStorage storage = player.worldObj.mapStorage; //Use mapStorage for data that's consistent between dimensions, otherwise perWorldStorage
+		ShopData shop = (ShopData) storage.loadData(WorldSavedData.class, getResultKey(x, y, z));
+		if(shop == null) {
+			shop = new ShopData(player.getCommandSenderName(), player.getPersistentID());
+			shop.setPos(x, y, z);
+			storage.setData(getResultKey(x, y, z), shop);
+		}
+		return shop;
+	}
+	
+	public static String getResultKey(int x, int y, int z) {
+		return x + "," + y +"," + z + ",";
+	}
+	
+	public UUID getPlayer() {
+		return key;
+	}
+
+	@Override
+	public void setCustomer(EntityPlayer customerIn) {
+		customer = customerIn;
+	}
+
+	@Override
+	public EntityPlayer getCustomer() {
+		return customer;
+	}
+
+	@Override
+	public MerchantRecipeList getRecipes(EntityPlayer player) {
+		MerchantRecipeList list = new MerchantRecipeList();
+		for(int slot = 0; slot < INVENTORY_SIZE; slot ++) {
+			try {
+				if(inventory[slot] != null 
+					&& inventory[slot].getItem() == Item.getItemById(WRITABLE_BOOK_ID) 
+					&& RecipeBook.isRecipeBook(inventory[slot])) {
+				RecipeBook book = new RecipeBook(inventory[slot]);
+				MerchantRecipe recipe = book.getRecipe();
+				this.updateRecipe(recipe);
+				list.addToListWithCheck(recipe);
+			}
+			} catch (Exception e) {}
+		}
+		return list;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void setRecipes(MerchantRecipeList p_70930_1_) {}
+
+	@Override
+	public void useRecipe(MerchantRecipe recipe) {
+		this.control.consumeItems(inventory, recipe.getItemToSell(), recipe.getItemToSell().stackSize);
+		this.control.addToInventory(inventory, recipe.getItemToBuy(), recipe.getItemToBuy().stackSize, 
+				getCustomer().worldObj, getCustomer().posX, getCustomer().posY, getCustomer().posZ);
+		if(recipe.hasSecondItemToBuy()) {
+			this.control.addToInventory(inventory, recipe.getSecondItemToBuy(), recipe.getSecondItemToBuy().stackSize, 
+					getCustomer().worldObj, getCustomer().posX, getCustomer().posY, getCustomer().posZ);
+		}
+		recipe.incrementToolUses();
+		this.updateRecipe(recipe);
+	}
+
+	/**
+	 * Used by the {@link EntityVillager} to handle playing sounds.
+	 */
+	@Override
+	public void func_110297_a_(ItemStack stack) {}
+
+	@Override
+	public int getSizeInventory() {
+		return INVENTORY_SIZE;
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int slot) {
+		if(slot < 0 || slot >= INVENTORY_SIZE)
+			return null;
+		return inventory[slot];
+	}
+
+	@Override
+	public ItemStack decrStackSize(int slot, int amount) {
+		if(inventory[slot] == null)
+			return null;
+		ItemStack result = new ItemStack(inventory[slot].getItem(), inventory[slot].stackSize, inventory[slot].getItemDamage());
+		if(inventory[slot].stackSize > amount) {
+			inventory[slot].stackSize -= amount;
+			result.stackSize = amount;
+		} else {
+			result.stackSize = inventory[slot].stackSize;
+			inventory[slot] = null;
+		}
+		return result;
+	}
+
+	@Override
+	public ItemStack getStackInSlotOnClosing(int slot) {
+		if(inventory[slot] == null)
+			return null;
+		return decrStackSize(slot, inventory[slot].stackSize);
+	}
+
+	@Override
+	public void setInventorySlotContents(int slot, ItemStack stack) {
+		inventory[slot] = stack;
+		this.setDirty(true);
+	}
+
+	@Override
+	public String getInventoryName() {
+		return "Shop";
+	}
+
+	@Override
+	public boolean hasCustomInventoryName() {
+		return true;
+	}
+
+	@Override
+	public int getInventoryStackLimit() {
+		return MAX_STACK_SIZE;
+	}
+
+	@Override
+	public boolean isUseableByPlayer(EntityPlayer player) {
+		return true;
+	}
+
+	/**
+	 * Used to notify adjacent blocks of block updates. Also handles how many
+	 * players may work with the inventory at the same time.
+	 */
+	@Override
+	public void openInventory() {
+		this.setDirty(true);
+	}
+
+	/**
+	 * Used to notify adjacent blocks of block updates. Also handles how many
+	 * players may work with the inventory at the same time.
+	 */
+	@Override
+	public void closeInventory() {
+		this.setDirty(true);
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int slot, ItemStack stack) {
+		return true;
+	}
+
+	@Override
+	public void readFromNBT(NBTTagCompound tagCompound) {
+		NBTTagList list = tagCompound.getTagList(ITEM_KEY, 10);
+		x = tagCompound.getInteger("x");
+		y = tagCompound.getInteger("y");
+		z = tagCompound.getInteger("z");
+		key = UUID.fromString(tagCompound.getString("key"));
+		inventory = new ItemStack[INVENTORY_SIZE];
+		for(int i = 0; i < list.tagCount(); i ++) {
+			NBTTagCompound compound = list.getCompoundTagAt(i);
+			int slot = compound.getInteger(SLOT_KEY);
+			if(slot >= 0 && slot < INVENTORY_SIZE)
+				inventory[slot] = ItemStack.loadItemStackFromNBT(compound);
+		}
+	}
+
+	@Override
+	public void writeToNBT(NBTTagCompound tagCompound) {
+		NBTTagList tagList = new NBTTagList();
+		for(int slot = 0; slot < INVENTORY_SIZE; slot ++) {
+			if(inventory[slot] != null) {
+				NBTTagCompound compound = new NBTTagCompound();
+				compound.setInteger(SLOT_KEY, slot);
+				tagList.appendTag(inventory[slot].writeToNBT(compound));
+			}
+		}
+		tagCompound.setTag(ITEM_KEY, tagList);
+		tagCompound.setInteger("x", x);
+		tagCompound.setInteger("y", y);
+		tagCompound.setInteger("z", z);
+		tagCompound.setString("key", key.toString());
+	}
+	
+	public ArrayList<ItemStack> getItems() {
+		ArrayList<ItemStack> items = new ArrayList();
+		for(int slot = 0; slot < INVENTORY_SIZE; slot ++)
+			if(inventory[slot] != null)
+				items.add(inventory[slot]);
+		return items;
+	}
+	
+	public void print() {
+		System.out.println(mapName + ":" + getResultKey(x, y, z));
+	}
+	
+	public int getAmount(Item item) {
+		int result = 0;
+		for(ItemStack current : inventory) {
+			if(current != null && current.getItem() == item) {
+				result += current.stackSize;
+			}
+		}
+		return result;
+	}
+	
+	private void updateRecipe(MerchantRecipe recipe) {
+		int room = getRemaining(recipe.getItemToBuy());
+		if(recipe.hasSecondItemToBuy() && room > getRemaining(recipe.getSecondItemToBuy()))
+			room = getRemaining(recipe.getSecondItemToBuy());
+		int remaining = (int)(this.control.getRemaining(inventory, recipe.getItemToSell()) / recipe.getItemToSell().stackSize);
+		int sellsLeft = Math.min(room, remaining); //this is the maximum number of sales that can be made currently.
+		NBTTagCompound compound = recipe.writeToTags();
+		int maxUses = compound.getInteger("maxUses"); //Cheating access to private variables. Is nothing sacred?
+		int uses = compound.getInteger("uses");
+		recipe.func_82783_a(uses + sellsLeft - maxUses);
+	}
+	
+	private int getRemaining(ItemStack stack) {
+		return (int)(control.getRoom(inventory, stack, stack.stackSize) / stack.stackSize);
+	}
+	
+	public boolean arePosSame(int xIn, int yIn, int zIn) {
+		return x == xIn && y == yIn && z == zIn;
+	}
+	
+	public boolean isOwner(UUID player) {
+		return player.equals(this.key);
+	}
+	
+	/**
+	 * Attempting to fix crash were IInventory.markDirty is called instead of WorldData.markDirty.
+	 */
+	public void markDirty() {
+		this.setDirty(true);
+	}
+
+}

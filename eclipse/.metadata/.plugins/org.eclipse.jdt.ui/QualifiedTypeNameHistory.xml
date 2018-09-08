@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<qualifiedTypeNameHistroy>
+<fullyQualifiedTypeName name="java.util.Stack"/>
+<fullyQualifiedTypeName name="net.minecraft.village.MerchantRecipe"/>
+<fullyQualifiedTypeName name="cpw.mods.fml.common.registry.GameRegistry"/>
+<fullyQualifiedTypeName name="net.minecraft.entity.IMerchant"/>
+<fullyQualifiedTypeName name="net.minecraft.inventory.IInventory"/>
+<fullyQualifiedTypeName name="com.snoopy_wwi_ace.isildurs_bane.tile_entity_trade.TileEntityTrade"/>
+<fullyQualifiedTypeName name="net.minecraft.tileentity.TileEntity"/>
+<fullyQualifiedTypeName name="cpw.mods.fml.relauncher.Side"/>
+<fullyQualifiedTypeName name="com.ibm.icu.util.StringTokenizer"/>
+<fullyQualifiedTypeName name="net.minecraftforge.event.world.WorldEvent"/>
+<fullyQualifiedTypeName name="net.minecraftforge.event.world.WorldEvent.Load"/>
+<fullyQualifiedTypeName name="net.minecraft.world.storage.MapStorage"/>
+<fullyQualifiedTypeName name="com.snoopy_wwi_ace.isildurs_bane.shops.ShopData"/>
+<fullyQualifiedTypeName name="com.snoopy_wwi_ace.isildurs_bane.IsildursBane"/>
+<fullyQualifiedTypeName name="com.sun.xml.internal.bind.v2.schemagen.xmlschema.List"/>
+<fullyQualifiedTypeName name="java.awt.List"/>
+<fullyQualifiedTypeName name="net.minecraft.nbt.NBTTagList"/>
+<fullyQualifiedTypeName name="com.snoopy_wwi_ace.isildurs_bane.shops.ShopList"/>
+<fullyQualifiedTypeName name="com.snoopy_wwi_ace.isildurs_bane.control.PlayerInventoryControl"/>
+<fullyQualifiedTypeName name="net.minecraft.item.Item"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="net.minecraft.item.ItemStack"/>
+<fullyQualifiedTypeName name="net.minecraft.world.World"/>
+<fullyQualifiedTypeName name="net.minecraft.entity.player.EntityPlayer"/>
+<fullyQualifiedTypeName name="java.util.UUID"/>
+<fullyQualifiedTypeName name="net.minecraft.tileentity.TileEntitySign"/>
+<fullyQualifiedTypeName name="java.util.StringTokenizer"/>
+<fullyQualifiedTypeName name="net.minecraft.util.ChatComponentText"/>
+</qualifiedTypeNameHistroy>

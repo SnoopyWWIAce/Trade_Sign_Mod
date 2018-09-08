@@ -1,0 +1,26 @@
+[17:25:19] [Server thread/INFO]: Starting minecraft server version 1.7.10
+[17:25:37] [Server thread/INFO]: Loading properties
+[17:25:37] [Server thread/INFO]: Default game type: SURVIVAL
+[17:25:37] [Server thread/INFO]: Generating keypair
+[17:25:38] [Server thread/INFO]: Starting Minecraft server on *:25565
+[17:25:39] [Server thread/INFO]: Preparing level "world"
+[17:25:40] [Server thread/INFO]: Preparing start region for level 0
+[17:25:41] [Server thread/INFO]: Preparing spawn area: 16%
+[17:25:42] [Server thread/INFO]: Done (2.992s)! For help, type "help" or "?"
+[17:26:51] [Server thread/WARN]: Can't keep up! Did the system time change, or is the server overloaded? Running 2252ms behind, skipping 45 tick(s)
+[17:27:10] [Server thread/WARN]: Can't keep up! Did the system time change, or is the server overloaded? Running 3218ms behind, skipping 64 tick(s)
+[17:28:08] [User Authenticator #1/INFO]: UUID of player sdkarrmann is 87fe2426-50b3-4c46-a6c0-136b7a07297e
+[17:28:09] [Server thread/INFO]: sdkarrmann[/127.0.0.1:4126] logged in with entity id 451 at (-292.98822547358867, 70.0, 283.5512697416662)
+[17:28:09] [Server thread/INFO]: sdkarrmann joined the game
+[17:28:12] [Server thread/WARN]: Can't keep up! Did the system time change, or is the server overloaded? Running 2961ms behind, skipping 59 tick(s)
+[17:28:40] [Server thread/WARN]: Can't keep up! Did the system time change, or is the server overloaded? Running 12358ms behind, skipping 247 tick(s)
+[17:29:21] [Server thread/INFO]: sdkarrmann lost connection: TextComponent{text='Disconnected', siblings=[], style=Style{hasParent=false, color=null, bold=null, italic=null, underlined=null, obfuscated=null, clickEvent=null, hoverEvent=null}}
+[17:29:21] [Server thread/INFO]: sdkarrmann left the game
+[17:29:36] [Server thread/INFO]: com.mojang.authlib.GameProfile@1ecc1da6[id=<null>,name=sdkarrmann,properties={},legacy=false] (/127.0.0.1:4149) lost connection: Disconnected
+[17:29:52] [Server thread/INFO]: com.mojang.authlib.GameProfile@655fea9c[id=<null>,name=sdkarrmann,properties={},legacy=false] (/127.0.0.1:4150) lost connection: Disconnected
+[17:30:00] [Server thread/INFO]: Stopping server
+[17:30:00] [Server thread/INFO]: Saving players
+[17:30:00] [Server thread/INFO]: Saving worlds
+[17:30:00] [Server thread/INFO]: Saving chunks for level 'world'/Overworld
+[17:30:00] [Server thread/INFO]: Saving chunks for level 'world'/Nether
+[17:30:00] [Server thread/INFO]: Saving chunks for level 'world'/The End
